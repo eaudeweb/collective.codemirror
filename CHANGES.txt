@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.1-edw1 (2012-03-15)
+---------------------
+- use simplejson instead of json
+
 0.1dev (unreleased)
 -------------------
 
