@@ -7,6 +7,7 @@ import re
 
 def initialize(context):
     patch_pythonscripts()
+    patch_pagetemplates()
 
 def patch_pythonscripts():
     import Products.PythonScripts
@@ -23,3 +24,13 @@ def patch_pythonscripts():
         self.error_lines = json.dumps(error_numbers)
         return res
     PythonScript._compile = _compile
+
+def patch_pagetemplates():
+    from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+    from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+    # customize `pt_editForm` of ZopePageTemplate
+    tmpl = PageTemplateFile('ptEdit', globals(), __name__='pt_editForm')
+    tmpl._owner = None
+    ZopePageTemplate.pt_editForm = tmpl
+    ZopePageTemplate.manage = tmpl
+    ZopePageTemplate.manage_main = tmpl
