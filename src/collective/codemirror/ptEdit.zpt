@@ -129,18 +129,8 @@ context</a> to view or download the current text.</p>
 </tr>
 </table>
 </form>
-<script tal:define="cursor_position python:request.get('codemirror-cursor-position')"
-        tal:content="structure python:'''var codemirror_python_data = {
-                        error_lines: '%(error_lines)s',
-                        cursor_position: %(cursor_position)s,
-                        line: %(line)s,
-                        ch: %(ch)s,
-                    }''' % {
-                        'error_lines': getattr(context, 'error_lines', '[]'),
-                        'cursor_position': cursor_position and 'true' or 'false',
-                        'line': (cursor_position or '-').split('-')[0] or 'null',
-                        'ch': (cursor_position or '-').split('-')[1] or 'null',
-                    }"></script>
+<script tal:define="json python:here.get_codemirror_json(request)"
+        tal:content="structure string:var codemirror_python_data=${json}"></script>
 <script>
 document.getElementsByTagName('textarea')[0].className += ' codemirror-python';
 document.getElementsByTagName('textarea')[0].onCodeMirrorSave = function() {

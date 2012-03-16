@@ -34,3 +34,22 @@ def patch_pagetemplates():
     ZopePageTemplate.pt_editForm = tmpl
     ZopePageTemplate.manage = tmpl
     ZopePageTemplate.manage_main = tmpl
+    def get_codemirror_json(self, request):
+        error_lines = [int(re.sub(r'.*line ([0-9]+)\).*',r'\1',error))
+                       for error in getattr(self, '_v_errors', [])
+                       if re.match(r'.*line ([0-9]+)\).*', error)]
+        cursor_position = request.get('codemirror-cursor-position', None)
+        data = {
+            'error_lines': error_lines,
+            'cursor_position': bool(cursor_position),
+        }
+        if cursor_position:
+            data.update({
+                'cursor_position': True,
+                'line': int(cursor_position.split('-')[0]),
+                'ch': int(cursor_position.split('-')[1]),
+            })
+        else:
+            data['cursor_position'] = False
+        return json.dumps(data)
+    ZopePageTemplate.get_codemirror_json = get_codemirror_json
