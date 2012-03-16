@@ -155,9 +155,9 @@ document.getElementsByTagName('textarea')[0].onCodeMirrorSave = function() {
 };
 document.getElementsByTagName('textarea')[0].onCodeMirrorLoad = function(cm) {
   // Mark lines with errors
-  var error_lines = <dtml-var expr="getattr(context, 'error_lines', '[]')">;
-  for (var i=0; i<error_lines.length;i++) {
-    cm.setMarker(error_lines[i]-1, "<span style=\"color: #900\">●</span> %N%");
+  var codemirror_data = <dtml-var expr="context.get_codemirror_json()">;
+  for (var i=0; i<codemirror_data.error_lines.length;i++) {
+    cm.setMarker(codemirror_data.error_lines[i]-1, "<span style=\"color: #900\">&#x25cf;</span> %N%");
   }
   // restore cursor position if a 'codemirror-cursor-position' is available
   <dtml-if "REQUEST.get('codemirror-cursor-position')">
