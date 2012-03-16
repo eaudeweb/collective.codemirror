@@ -28,6 +28,7 @@ def patch_pythonscripts():
 def patch_pagetemplates():
     from Products.PageTemplates.PageTemplateFile import PageTemplateFile
     from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+    from zope.pagetemplate.pagetemplate import _error_start
     # customize `pt_editForm` of ZopePageTemplate
     tmpl = PageTemplateFile('ptEdit', globals(), __name__='pt_editForm')
     tmpl._owner = None
@@ -53,3 +54,14 @@ def patch_pagetemplates():
             data['cursor_position'] = False
         return json.dumps(data)
     ZopePageTemplate.get_codemirror_json = get_codemirror_json
+    original_read = ZopePageTemplate.read
+    def read(self, *args, **kwargs):
+        text = original_read(self, *args, **kwargs)
+        if text.startswith(_error_start):
+            errend = text.find('-->')
+            if errend >= 0:
+                text = text[errend + 3:]
+                if text[:1] == "\n":
+                    text = text[1:]
+        return text
+    ZopePageTemplate.read = read
