@@ -1,4 +1,6 @@
 from App.special_dtml import DTMLFile
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 try:
     import simplejson as json
 except ImportError:
@@ -28,7 +30,6 @@ def patch_pythonscripts():
     ZPythonScriptHTML_editForm = DTMLFile('pyScriptEdit', globals())
     PythonScript.manage = PythonScript.manage_main = ZPythonScriptHTML_editForm
     PythonScript.ZPythonScriptHTML_editForm =ZPythonScriptHTML_editForm
-    original_compile = PythonScript._compile
     def get_codemirror_json(self, request):
         error_lines = [int(re.sub(r'.*line ([0-9]+)\).*',r'\1',error))
                        for error in self.errors
@@ -40,8 +41,8 @@ def patch_pythonscripts():
         return json.dumps(data)
     PythonScript.get_codemirror_json = get_codemirror_json
 
+
 def patch_pagetemplates():
-    from Products.PageTemplates.PageTemplateFile import PageTemplateFile
     from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
     from zope.pagetemplate.pagetemplate import _error_start
     # customize `pt_editForm` of ZopePageTemplate
