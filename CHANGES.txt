@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.1-edw4 (2012-03-16)
+---------------------
+- fix for zope 2.12, 2.13
+
 0.1-edw3 (2012-03-16)
 ---------------------
 - clean up javascript data; fix bugs with page template editing
